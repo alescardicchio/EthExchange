@@ -1,7 +1,7 @@
 // Contratto di default di ogni Truffle project
 // Si occupa della gestione del deployment degli smart contracts sulla blockchain
 
-pragma solidity >=0.4.21 <0.6.0;
+pragma solidity >=0.4.20;
 
 contract Migrations {
   address public owner;
