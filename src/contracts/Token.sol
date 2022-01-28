@@ -8,7 +8,7 @@ contract Token {
     //simbolo token
     string public symbol = "RM3";
     //definizione dallo standard
-    uint256 public totalSupply;
+    uint256 public totalSupply = 1000000;
     //mappa indirizzi -> saldo token 
     mapping(address => uint256) public balanceOf;
     //mappa indirizzi -> indirizzi autorizzati a spendere -> quantita' token
@@ -27,12 +27,10 @@ contract Token {
     );
 
     //costruttore 
-    constructor(uint256 _initialSupply) public {
+    constructor() public {
         //msg.sender inidrizzo chi effettua il deploy del contratto
         //assegnazione dei token ad un indirizzo
-        balanceOf[msg.sender] = _initialSupply;
-        //set numero totale di tokens
-        totalSupply = _initialSupply;
+        balanceOf[msg.sender] = totalSupply;
     }
 
     //trasferimento (return un boolano)
@@ -65,11 +63,8 @@ contract Token {
         //trasferiento della somma
         balanceOf[_from] -= _value;
         balanceOf[_to] += _value;
-
         allowance[_from][msg.sender] -= _value;
-
         emit Transfer(_from, _to, _value);
-
         return true;
     }
 

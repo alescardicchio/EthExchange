@@ -6,5 +6,5 @@ const Token_Migration = artifacts.require("Token");
 
 module.exports = function(deployer) {
   deployer.deploy(EthereumSwap_Migration);
-  deployer.deploy(Token_Migration, 1000000);
+  deployer.deploy(Token_Migration);
 };
