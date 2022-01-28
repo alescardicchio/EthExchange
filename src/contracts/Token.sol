@@ -11,10 +11,18 @@ contract Token {
     uint256 public totalSupply;
     //mappa indirizzi -> saldo token 
     mapping(address => uint256) public balanceOf;
+    //mappa indirizzi -> indirizzi autorizzati a spendere -> quantita' token
+    mapping(address => mapping(address => uint256)) public allowance;
 
     event Transfer(
         address indexed _from,
         address indexed _to,
+        uint256 _value
+    );
+
+    event Approval(
+        address indexed _owner,
+        address indexed _spender,
         uint256 _value
     );
 
@@ -37,12 +45,36 @@ contract Token {
         balanceOf[_to] += _value;
         //transfer event
         emit Transfer(msg.sender, _to, _value);
+        return true;
+    }
+
+    //approvazione per il trasferimento da parte di un account spender
+    function approve(address _spender, uint256 _value) public returns (bool success){
+        allowance[msg.sender][_spender] = _value;
+        emit Approval(msg.sender, _spender, _value);
+        return true;
+    }
+
+
+    //trasferimento da una sorgente
+    function transferFrom(address _from, address _to, uint256 _value) public returns (bool success){
+        //from deve avere token sufficienti
+        require(balanceOf[_from] >= _value);
+        //la quantità approvata deve essere >= di quella trasferita
+        require(allowance[_from][msg.sender] >= _value);
+        //trasferiento della somma
+        balanceOf[_from] -= _value;
+        balanceOf[_to] += _value;
+
+        allowance[_from][msg.sender] -= _value;
+
+        emit Transfer(_from, _to, _value);
 
         return true;
     }
 
 
-    
+
     //funzione getter creata di default dallo standard
     //funzione balanceOf creata di default dallo standard
     
