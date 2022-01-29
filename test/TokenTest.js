@@ -1,12 +1,12 @@
+/*
 // test token totali al momento del deployment
 const { assert } = require("chai");
 
 var Token = artifacts.require("Token");
 
-contract('Token', function(accounts){
-    
+contract('Token', async function(accounts) { 
     var tokenInstance;
-
+    
     it('inizializza il contratto con i valori corretti', function() {
         return Token.deployed().then(function(instance){
             tokenInstance = instance;
@@ -80,9 +80,13 @@ contract('Token', function(accounts){
     it('gestione trasferimento delegato di token', function() {
         return Token.deployed().then(function(instance){
             tokenInstance = instance;
-            fromAccount = accounts[2];
-            toAccount = accounts[3];
+            fromAccount = accounts[2]; 
+            toAccount = accounts[3];   
             spendingAccount = accounts[4];
+            // 1. from account riceve 100 token
+            // 2. spending account è autorizzato a spendere 10 token da from account
+            //    < fromAccount, <spendingAccount,10> >  
+
             //trasferimento di qualche token verso il fromAccount
             return tokenInstance.transfer(fromAccount, 100, {from:accounts[0]});
         }).then(function(receipt){
@@ -120,3 +124,4 @@ contract('Token', function(accounts){
     });
 
 });
+*/
