@@ -1,11 +1,15 @@
 const { assert } = require("chai")
 const { default: Web3 } = require("web3")
 
+require('chai')
+  .use(require('chai-as-promised'))
+  .should()
+
 const Token = artifacts.require('Token')
 const EthereumSwap = artifacts.require('EthereumSwap')
 
 // Funzione ausiliaria per convertire da Ether a Wei
-// es. 1000000000000000000000000 => 1000000
+// es. 1000000 => 1000000000000000000000000
 function tokens(n) {
     return web3.utils.toWei(n, 'ether');
 }
@@ -83,8 +87,17 @@ contract('EthereumSwap', ([deployer, investor]) => {
             let ethSwapBalance = await token.balanceOf(ethereumSwap.address)
             let ethSwapEthereumBalance = await web3.eth.getBalance(ethereumSwap.address)
             assert.equal(ethSwapBalance.toString(), tokens('1000000'))
-            assert.equal(ethSwapEthereumBalance.toString(), web3.utils.toWei('0', 'Ether'), 'prova')
+            assert.equal(ethSwapEthereumBalance.toString(), web3.utils.toWei('0', 'Ether'))
         
+            // Controlliamo che l'evento relativo alla vendita di token sia stato emesso e che i valori corrispondenti siano esatti
+            const event = result.logs[0].args
+            assert.equal(event.account, investor)
+            assert.equal(event.token, token.address)
+            assert.equal(event.quantita.toString(), tokens('100').toString())
+            assert.equal(event.rate.toString(), '100')
+        
+            // Verifichiamo che l'utente(investor) non possa vendere più token di quanti ne abbia
+            await ethereumSwap.sellTokens(tokens('500'), {from: investor}).should.be.rejected
         })
     })
 })

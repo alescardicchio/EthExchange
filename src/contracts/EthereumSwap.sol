@@ -16,6 +16,13 @@ contract EthereumSwap {
         uint rate
     );
 
+    event TokenVenduti(
+        address account,
+        address token,
+        uint quantita,
+        uint rate
+    );
+
     constructor(Token _token) public {
         token = _token;
     }
@@ -40,12 +47,21 @@ contract EthereumSwap {
 
     // Funzione che permette la vendita di token
     function sellTokens(uint _amount) public {
+        // L'utente non può vendere più token di quelli in suo possesso
+        require(token.balanceOf(msg.sender) >= _amount);
+        
         // Calcolo del numero di Ether da dare all'utente
         uint etherAmount = _amount / rate; // quantità di Token da convertire / tasso di conversione
         
+        // Check che l'utente possegga almeno la quantità di ether richiesta
+        require(address(this).balance >= etherAmount);
+
         // Trasferimento di token dall'utente all'exchange
         token.transferFrom(msg.sender, address(this), _amount);
+        
         // msg.sender(utente) riceve gli eth da questo contratto
         msg.sender.transfer(etherAmount);
+
+        emit TokenVenduti(msg.sender, address(token), _amount, rate);
     }
 }
