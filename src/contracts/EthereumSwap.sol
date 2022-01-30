@@ -27,11 +27,12 @@ contract EthereumSwap {
         token = _token;
     }
 
-    // Funzione che permette l'acquisto di token
+    // Funzione che permette l'acquisto di token da parte dell'utente
     // msg è una variabile globale in Solidity,
     // .sender restituisce l'address di chi invoca la funzione. 
     // .value restituisce l'ammontare di ether inviati da parte di chi invoca la funzione.
-    function buyTokens() public payable {
+    function buyTokens() public payable {   // 'payable' gestisce in automatico la ricezione di ether
+
         // Calcolo del numero di Token da acquistare 
         uint tokenAmount = msg.value * rate; // quantità di Ethereum da convertire * tasso di conversione
         

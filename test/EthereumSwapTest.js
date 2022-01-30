@@ -43,6 +43,7 @@ contract('EthereumSwap', ([deployer, investor]) => {
 
         before(async() => {
             // Acquistiamo dei token prima di ciascun esempio
+            // L'utente(investor) acquista in token il corrispettivo di 1 ETH
             result = await ethereumSwap.buyTokens({from: investor, value: tokens('1')});
         })
 
@@ -54,9 +55,9 @@ contract('EthereumSwap', ([deployer, investor]) => {
             // Controlliamo il bilancio dell' exchange dopo l'acquisto dell'investitore
             let ethSwapBalance = await token.balanceOf(ethereumSwap.address)
             let ethSwapEthereumBalance = await web3.eth.getBalance(ethereumSwap.address)
-            // all'inizio l'exchange ha 1'000'000 di token
+            // all'inizio l'exchange ha 1.000.000 di token
             // l'investitore spende 1 eth per comprare 100 token
-            // alla fine l'exchange possiede 1 eth e 999'900 token
+            // alla fine l'exchange possiede 1 eth e 999.900 token
             assert.equal(ethSwapBalance.toString(), tokens('999900'))
             assert.equal(ethSwapEthereumBalance.toString(), web3.utils.toWei('1', 'Ether'))
         
