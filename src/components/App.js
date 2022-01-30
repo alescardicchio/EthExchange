@@ -48,15 +48,11 @@ class App extends Component {
 
   async loadWeb3() {
     if (window.ethereum) {
-      window.web3 = new Web3(window.ethereum)
-      await window.ethereum.enable()
+      await window.ethereum.request({method: 'eth_requestAccounts'});
+      window.web3 = new Web3(window.ethereum);
+      return true;
     }
-    else if (window.web3) {
-      window.web3 = new Web3(window.web3.currentProvider)
-    }
-    else {
-      window.alert('Non-Ethereum browser detected. You should consider trying MetaMask!')
-    }
+    return false;
   }
 
   buyTokens = (etherAmount) => {
@@ -65,6 +61,22 @@ class App extends Component {
       this.setState({ loading: false })
     })
   }
+/*
+  sellTokens = async (tokenAmount) => {
+    this.setState({ loading: true })
+    await this.state.token.methods.approve(this.state.ethSwap.address, tokenAmount).send({ from: this.state.account }).on('transactionHash', async (hash) => {
+      await this.state.ethSwap.methods.sellTokens(tokenAmount).send({ from: this.state.account }).on('transactionHash', (hash) => {
+        this.setState({ loading: false })
+      })
+    })
+*/
+    sellTokens = async (tokenAmount) => {
+      this.setState({ loading: true });
+      await this.state.token.methods.approve(this.state.ethSwap.address, tokenAmount).send({ from: this.state.account });
+      await this.state.ethSwap.methods.sellTokens(tokenAmount).send({ from: this.state.account });
+      this.setState({ loading: false });
+    };
+  
 
   constructor(props) {
     super(props)
@@ -81,12 +93,13 @@ class App extends Component {
   render() {
     let content
     if(this.state.loading) {
-      content = <p id="loader" className="text-center">Loading...</p>
+      content = <p id="loader" className="text-center">Caricamento...</p>
     } else {
       content = <Main
         ethBalance={this.state.ethBalance}
         tokenBalance={this.state.tokenBalance}
         buyTokens={this.buyTokens}
+        sellTokens={this.sellTokens}
       />
     }
 
@@ -97,13 +110,7 @@ class App extends Component {
           <div className="row">
             <main role="main" className="col-lg-12 ml-auto mr-auto" style={{ maxWidth: '600px' }}>
               <div className="content mr-auto ml-auto">
-                <a
-                  href="http://www.dappuniversity.com/bootcamp"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                </a>
-
+                
                 {content}
 
               </div>
