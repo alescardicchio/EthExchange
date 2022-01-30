@@ -61,21 +61,20 @@ class App extends Component {
       this.setState({ loading: false })
     })
   }
-/*
-  sellTokens = async (tokenAmount) => {
+
+  sellTokens = (tokenAmount) => {
     this.setState({ loading: true })
-    await this.state.token.methods.approve(this.state.ethSwap.address, tokenAmount).send({ from: this.state.account }).on('transactionHash', async (hash) => {
-      await this.state.ethSwap.methods.sellTokens(tokenAmount).send({ from: this.state.account }).on('transactionHash', (hash) => {
-        this.setState({ loading: false })
-      })
-    })
-*/
-    sellTokens = async (tokenAmount) => {
-      this.setState({ loading: true });
-      await this.state.token.methods.approve(this.state.ethSwap.address, tokenAmount).send({ from: this.state.account });
-      await this.state.ethSwap.methods.sellTokens(tokenAmount).send({ from: this.state.account });
-      this.setState({ loading: false });
-    };
+    this.state.token.methods.approve(this.state.ethSwap.address, tokenAmount).send({ from: this.state.account }).on('transactionHash', (hash) => delayedCallback(this,hash));
+    
+    function delayedCallback(obj, hash) {
+      console.log('in delay', obj.state.account)
+      window.setTimeout(() => { console.log('approval', hash) 
+        obj.state.ethSwap.methods.sellTokens(tokenAmount).send({ from: obj.state.account }).on('transactionHash', (hash) => {
+          obj.setState({ loading: false })
+        })
+      }, 1000)
+    }
+  };
   
 
   constructor(props) {

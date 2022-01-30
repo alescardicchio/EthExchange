@@ -22,7 +22,7 @@ class SellForm extends Component {
           <div>
             <label className="float-left"><b>Input</b></label>
             <span className="float-right text-muted">
-              Balance: {window.web3.utils.fromWei(this.props.tokenBalance, 'Ether')}
+              Bilancio: {window.web3.utils.fromWei(this.props.tokenBalance, 'Ether')}
             </span>
           </div>
           <div className="input-group mb-4">
@@ -48,7 +48,7 @@ class SellForm extends Component {
           <div>
             <label className="float-left"><b>Output</b></label>
             <span className="float-right text-muted">
-              Balance: {window.web3.utils.fromWei(this.props.ethBalance, 'Ether')}
+              Bilancio: {window.web3.utils.fromWei(this.props.ethBalance, 'Ether')}
             </span>
           </div>
           <div className="input-group mb-2">
@@ -70,7 +70,7 @@ class SellForm extends Component {
             <span className="float-left text-muted">Exchange Rate</span>
             <span className="float-right text-muted">100 RM3 = 1 ETH</span>
           </div>
-          <button type="submit" className="btn btn-primary btn-block btn-lg">SWAP!</button>
+          <button type="submit" className="btn btn-primary btn-block btn-lg">SWAP</button>
         </form>
       );
     }
